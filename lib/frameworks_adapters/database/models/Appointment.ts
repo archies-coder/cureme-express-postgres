@@ -1,5 +1,12 @@
 /* eslint-disable no-unused-vars */
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne} from 'typeorm'
+import {
+  Entity,
+  BaseEntity,
+  PrimaryGeneratedColumn,
+  Column,
+  JoinColumn,
+  ManyToOne,
+  Timestamp} from 'typeorm'
 import Doctor from './Doctor'
 import Patient from './Patient'
 
@@ -9,14 +16,23 @@ export default class Appointment extends BaseEntity{
   @PrimaryGeneratedColumn()
   id!: number
 
-  @ManyToOne(type => Patient, patient => patient.appointments)
+  @ManyToOne(
+    type => Patient,
+    patient => patient.appointments
+  )
   @JoinColumn()
   patient!: Patient
 
-  @Column()
-  email!: string
-
-  @ManyToOne(type => Doctor, doctor => doctor.appointments)
+  @ManyToOne(
+    type => Doctor,
+    doctor => doctor.appointments
+  )
   @JoinColumn()
   doctor!: Doctor
+
+  @Column()
+  date!: Date
+
+  @Column()
+  time?: string
 }

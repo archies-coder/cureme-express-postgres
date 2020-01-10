@@ -5,11 +5,12 @@ import 'reflect-metadata'
 // import * as CONFIG from './ormconfig.json'
 // import { createConnection } from 'typeorm'
 import User from './lib/frameworks_adapters/database/models/User'
+import Appointment from './lib/frameworks_adapters/database/models/Appointment'
 
 const start = async () => {
   try {
     await connection()
-      .then(cn=> cn.manager.count(User)
+      .then(cn=> cn.manager.count(Appointment)
         .then(no=> console.log(no)))
       .catch(err=> console.log(err))
 

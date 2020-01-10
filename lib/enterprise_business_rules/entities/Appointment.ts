@@ -1,24 +1,24 @@
+/* eslint-disable no-unused-vars */
+import { Timestamp } from 'typeorm'
+
 /*
 id
-patient name
-doctor name
-date & time
-issue
-email
+patient id
+doctor id
 */
 
 export default class Appointment {
     id?: number | null
-    firstName!: string
-    lastName!: string
-    email: string
+    patientID!: number
     doctorID!: number
+    date!: Date
+    time?: Timestamp
 
-    constructor(id = null, fName: string, lName: string, email: string, docID: number) {
+    constructor(id = null, patID: number, docID: number, date: Date, timeStamp: Timestamp) {
       this.id = id
-      this.firstName = fName
-      this.lastName = lName
-      this.email = email
+      this.patientID = patID
       this.doctorID = docID
+      this.date = date
+      this.time = timeStamp
     }
 }
