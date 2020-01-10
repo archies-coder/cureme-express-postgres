@@ -4,6 +4,7 @@ import cors from 'cors'
 import Hello from './routes/Hello'
 import Register from './routes/Register'
 import Login from './routes/Login'
+import Appointments from './routes/Appointments'
 import Store from './../database/RedisStore'
 import SessionManager from './../../interface_adapters/security/SessionManager'
 
@@ -26,9 +27,11 @@ export const createServer = async () => {
   })
 
   //Main Routes
+  // TODO Auth middleware
   server.use(Hello)
   server.use(Register)
   server.use(Login)
+  server.use(Appointments)
 
   //Server as Output
   return server
