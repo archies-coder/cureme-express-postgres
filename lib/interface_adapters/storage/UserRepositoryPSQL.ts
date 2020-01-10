@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm'
-import User from './../../enterprise_business_rules/entities/User'
+import User from '../../enterprise_business_rules/entities/User'
 
-export default class UserRepository {
+export default class UserRepositoryPSQL {
 
   async find() {
     const data = await getRepository(User).find()

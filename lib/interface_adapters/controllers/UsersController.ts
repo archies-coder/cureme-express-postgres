@@ -1,22 +1,44 @@
+/* eslint-disable no-unused-vars */
+import * as express from 'express'
 import CreateUser from './../../application_business_rules/use_cases/CreateUser'
-import UserRepository from './../storage/UserRepository'
+import UserRepositoryPSQL from '../storage/UserRepositoryPSQL'
 import UserSerializer from './../serializers/UserSerializer'
 import { compare } from 'bcryptjs'
+import validator from 'validator'
+import UserRepository from '../../application_business_rules/repositories/UserRepository'
 
-const userRepository = new UserRepository()
+const userRepository = new UserRepository(new UserRepositoryPSQL())
 
-const create = async (req: any, res: any) => {
+const create = async (req: express.Request, res: express.Response) => {
 
+  if(!req.body){
+    return res.status(400).send('No Body')
+  }
   //Input
-  const {firstName, lastName, email, password} = req.body
+  const { firstName, lastName, email, password } = req.body
 
-  //User Already Registered
-  const ExistingUser = await userRepository.findOne(email)
-  if (ExistingUser) {
-    return res.status(406).send('Wrong Body')
+  if (
+    validator.isEmpty(password) ||
+    !validator.isLength(password, { min: 5 })
+  ){
+    return res.status(400).send('Invalid Password')
   }
 
-  // TODO  (validations)
+  if(!validator.isEmail(email)) return res.status(400).send('Invalid Email')
+
+
+  //Sanitizing Input
+  const sanitizedEmail = validator.normalizeEmail(email)
+
+  if(sanitizedEmail === false) {
+    return res.status(400).send('Invalid Email')
+  }
+
+  //User Already Registered
+  const ExistingUser = await userRepository.findOne(sanitizedEmail as string)
+  if (ExistingUser) {
+    return res.status(406).send('Already there')
+  }
 
   //Treatment
   const user = await CreateUser(firstName, lastName, email, password, { userRepository })
@@ -42,8 +64,24 @@ const login = async (req: any, res: any) => {
   //Input
   const {email, password} = req.body
 
+  if (
+    validator.isEmpty(password) ||
+    !validator.isLength(password, { min: 5 })
+  ){
+    return res.status(400).send('Invalid Password')
+  }
+
+  if(!validator.isEmail(email)) return res.status(400).send('Invalid Email')
+
+  //Sanitizing Input
+  const sanitizedEmail = validator.normalizeEmail(email)
+
+  if(sanitizedEmail === false) {
+    return res.status(400).send('Invalid Email')
+  }
+
   //No such Email
-  const user = await userRepository.findOne(email)
+  const user = await userRepository.findOne(sanitizedEmail)
 
   if(!user){
     console.log('no such user')
@@ -62,6 +100,7 @@ const login = async (req: any, res: any) => {
   req.session.userId = user.id
   req.session.user = user
   const sid= req.sessionID
+  console.log('Currently Logged In User :::::', user.email || req.session.user.email)
 
   //Output
   res.status(200).send({
