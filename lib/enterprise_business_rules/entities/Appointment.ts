@@ -2,9 +2,11 @@
 import { Timestamp } from 'typeorm'
 
 /*
-id
-patient id
-doctor id
+  id
+  patient id
+  doctor id
+  date
+  time
 */
 
 export default class Appointment {

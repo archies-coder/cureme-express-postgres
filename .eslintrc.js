@@ -36,6 +36,7 @@ module.exports = {
             'error',
             'never'
 		],
-		'linebreak-style': 0
+        'linebreak-style': 0,
+        'no-unused-vars': 0
     }
 }

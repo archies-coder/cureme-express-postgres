@@ -1,12 +1,14 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
+import Store from './../database/RedisStore'
+import SessionManager from './../../interface_adapters/security/SessionManager'
+// Routes
 import Hello from './routes/Hello'
 import Register from './routes/Register'
 import Login from './routes/Login'
 import Appointments from './routes/Appointments'
-import Store from './../database/RedisStore'
-import SessionManager from './../../interface_adapters/security/SessionManager'
+import Doctor from './routes/Doctor'
 
 export const createServer = async () => {
   const server = express()
@@ -32,6 +34,7 @@ export const createServer = async () => {
   server.use(Register)
   server.use(Login)
   server.use(Appointments)
+  server.use(Doctor)
 
   //Server as Output
   return server
